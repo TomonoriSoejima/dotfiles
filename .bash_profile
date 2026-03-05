@@ -1,0 +1,4 @@
+# Load main bash configuration
+if [ -f ~/.bashrc ]; then
+    source ~/.bashrc
+fi
