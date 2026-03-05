@@ -44,8 +44,8 @@ fi
 # Tool initializations
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# Powerline prompt (if using)
-# function _update_ps1() {
-#     PS1="$(powerline-go -error $?)"
-# }
-# PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+# Powerline prompt
+function _update_ps1() {
+    PS1="$(powerline-go -error $?)"
+}
+PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"

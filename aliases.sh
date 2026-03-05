@@ -23,3 +23,12 @@ alias zip="zip -9"
 # Shortcuts
 alias down="open ~/Downloads"
 alias cdown="cd ~/Downloads"
+
+# Terminal tab title
+title() {
+  if [ -z "$1" ]; then
+    printf "\033]0;%s\007" "$(pwd)"
+  else
+    printf "\033]0;%s\007" "$1"
+  fi
+}
