@@ -1,0 +1,252 @@
+#!/bin/zsh
+
+# Interactive Support Menu for Ticket Management
+# Author: Support Engineer Helper
+# Date: December 4, 2025
+
+# Colors for better readability
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+TICKET_DIR=$(pwd)
+TICKET_ID=$(basename "$TICKET_DIR" | cut -d'-' -f1)
+
+show_menu() {
+    clear
+    echo "${BLUE}╔════════════════════════════════════════════════════╗${NC}"
+    echo "${BLUE}║        Support Engineering Quick Menu             ║${NC}"
+    echo "${BLUE}╠════════════════════════════════════════════════════╣${NC}"
+    echo "${BLUE}║${NC} Ticket: ${GREEN}$TICKET_ID${NC}                                  ${BLUE}║${NC}"
+    echo "${BLUE}╚════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo "${YELLOW}Common Actions:${NC}"
+    echo "  1) Show ticket feeds"
+    echo "  2) Show attachments"
+    echo "  3) Extract all email threads"
+    echo "  4) View feeds.json"
+    echo "  5) Count total messages"
+    echo ""
+    echo "${YELLOW}Analysis:${NC}"
+    echo "  6) Show customer's last message"
+    echo "  7) Show all customer emails"
+    echo "  8) Show timeline summary"
+    echo "  9) Extract technical details"
+    echo ""
+    echo "${YELLOW}Documentation:${NC}"
+    echo " 10) Create case summary"
+    echo " 11) List all dates and authors"
+    echo " 12) Extract automation messages"
+    echo ""
+    echo "${YELLOW}File Operations:${NC}"
+    echo " 13) Open attachments folder"
+    echo " 14) Search in feeds"
+    echo " 15) Export to markdown"
+    echo ""
+    echo " 0) Exit"
+    echo ""
+    echo -n "Select option: "
+}
+
+show_feeds() {
+    clear
+    echo "${GREEN}=== Ticket Feeds ===${NC}"
+    cat feeds.txt | less
+}
+
+show_attachments() {
+    clear
+    echo "${GREEN}=== Attachments ===${NC}"
+    if [ -d "attachments" ]; then
+        ls -lh attachments/
+    else
+        echo "No attachments folder found."
+    fi
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+extract_email_threads() {
+    clear
+    echo "${GREEN}=== Email Threads ===${NC}"
+    grep -A 3 "Type: Email" feeds.txt | grep "thread::" | sed 's/thread:://' | sort -u
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+view_json() {
+    clear
+    echo "${GREEN}=== feeds.json ===${NC}"
+    if command -v jq &> /dev/null; then
+        cat feeds.json | jq '.' | less
+    else
+        cat feeds.json | less
+    fi
+}
+
+count_messages() {
+    clear
+    echo "${GREEN}=== Message Count ===${NC}"
+    total=$(grep -c "^Type: " feeds.txt)
+    emails=$(grep -c "^Type: Email" feeds.txt)
+    feed_msgs=$(grep -c "^Type: Feed" feeds.txt)
+    echo "Total messages: $total"
+    echo "Emails: $emails"
+    echo "Feed messages: $feed_msgs"
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+last_customer_message() {
+    clear
+    echo "${GREEN}=== Last Customer Message ===${NC}"
+    # Find the last email that's not from automation
+    awk '/Type: Email/ {
+        email = $0
+        getline; author = $0
+        getline; date = $0
+        getline; getline; content = $0
+        while (getline && !/^----/) {
+            content = content "\n" $0
+        }
+        if (author !~ /@elastic\.co/ && content !~ /automated message/) {
+            print email "\n" author "\n" date "\n" content
+        }
+    }' feeds.txt | tail -n 20
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+all_customer_emails() {
+    clear
+    echo "${GREEN}=== All Customer Emails ===${NC}"
+    grep -B 2 "Type: Email" feeds.txt | grep -v "@elastic.co" | grep -v "^--$" | less
+}
+
+timeline_summary() {
+    clear
+    echo "${GREEN}=== Timeline Summary ===${NC}"
+    awk '/Type:/ {type=$2} /Date:/ {date=$2} /Author:/ {author=$2; print date " | " type " | " author}' feeds.txt | sort
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+extract_technical() {
+    clear
+    echo "${GREEN}=== Technical Details ===${NC}"
+    echo "Searching for technical keywords..."
+    grep -iE "(error|exception|stack|trace|version|config|log|issue|problem)" feeds.txt | head -n 50
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+create_summary() {
+    clear
+    echo "${GREEN}=== Creating Case Summary ===${NC}"
+    summary_file="case_summary_${TICKET_ID}.md"
+    
+    cat > "$summary_file" << EOF
+# Case Summary: $TICKET_ID
+
+**Generated:** $(date)
+
+## Timeline
+$(awk '/Type:/ {type=$2} /Date:/ {date=$2} /Author:/ {author=$2; print "- " date " | " type " | " author}' feeds.txt | sort)
+
+## Message Count
+- Total messages: $(grep -c "^Type: " feeds.txt)
+- Emails: $(grep -c "^Type: Email" feeds.txt)
+- Feed messages: $(grep -c "^Type: Feed" feeds.txt)
+
+## Attachments
+$(ls -1 attachments/ 2>/dev/null || echo "No attachments")
+
+EOF
+    
+    echo "Summary created: $summary_file"
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+list_dates_authors() {
+    clear
+    echo "${GREEN}=== All Dates and Authors ===${NC}"
+    grep -E "^(Date|Author):" feeds.txt | paste - - | less
+}
+
+extract_automation() {
+    clear
+    echo "${GREEN}=== Automated Messages ===${NC}"
+    grep -B 2 -A 5 "automated message" feeds.txt | less
+}
+
+open_attachments_folder() {
+    if [ -d "attachments" ]; then
+        open attachments/
+    else
+        echo "No attachments folder found."
+        read -p "Press Enter to continue..."
+    fi
+}
+
+search_feeds() {
+    clear
+    echo "${GREEN}=== Search in Feeds ===${NC}"
+    echo -n "Enter search term: "
+    read search_term
+    grep -i "$search_term" feeds.txt | less
+}
+
+export_markdown() {
+    clear
+    echo "${GREEN}=== Export to Markdown ===${NC}"
+    output_file="feeds_export_${TICKET_ID}.md"
+    
+    cat > "$output_file" << EOF
+# Ticket Feeds: $TICKET_ID
+
+**Exported:** $(date)
+
+---
+
+EOF
+    
+    cat feeds.txt >> "$output_file"
+    
+    echo "Exported to: $output_file"
+    echo ""
+    read -p "Press Enter to continue..."
+}
+
+# Main loop
+while true; do
+    show_menu
+    read choice
+    
+    case $choice in
+        1) show_feeds ;;
+        2) show_attachments ;;
+        3) extract_email_threads ;;
+        4) view_json ;;
+        5) count_messages ;;
+        6) last_customer_message ;;
+        7) all_customer_emails ;;
+        8) timeline_summary ;;
+        9) extract_technical ;;
+        10) create_summary ;;
+        11) list_dates_authors ;;
+        12) extract_automation ;;
+        13) open_attachments_folder ;;
+        14) search_feeds ;;
+        15) export_markdown ;;
+        0) 
+            echo "${GREEN}Goodbye!${NC}"
+            exit 0
+            ;;
+        *)
+            echo "${YELLOW}Invalid option. Please try again.${NC}"
+            sleep 1
+            ;;
+    esac
+done
