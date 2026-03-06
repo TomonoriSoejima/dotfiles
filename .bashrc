@@ -9,3 +9,6 @@
 
 # Load Elastic Cloud functions
 [ -f ~/dotfiles/functions/elastic.sh ] && source ~/dotfiles/functions/elastic.sh
+
+# Load support ticket functions
+[ -f ~/dotfiles/functions/support.sh ] && source ~/dotfiles/functions/support.sh
