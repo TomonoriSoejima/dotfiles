@@ -271,19 +271,9 @@ diagme5 ()
 # Ticket Workflow Functions
 # ======================================================================
 
-# ny() - Download ticket feeds and setup copilot-instructions
+# ny() - Download ticket feeds
 # Usage: ny TICKET_NUMBER
 # Example: ny 12345678
 ny() {
-    (cd /Users/surfer/elastic/utilities/sfdc-case-downloader && python3 feed_downloader_simple.py "$@")
-    
-    if [[ -n "$1" ]]; then
-        local ticket_dir=$(ls -d ~/tickets/"$1"* 2>/dev/null | head -1)
-        if [[ -n "$ticket_dir" && -d "$ticket_dir" ]]; then
-            mkdir -p "$ticket_dir/.github"
-            rm -f "$ticket_dir/.github/copilot-instructions.md"
-            ln -s ~/support-templates/copilot-instructions.md "$ticket_dir/.github/copilot-instructions.md"
-            echo "✓ Copilot instructions symlinked"
-        fi
-    fi
+    (cd $HOME/elastic/utilities/sfdc-case-downloader && python3 feed_downloader_simple.py "$@")
 }

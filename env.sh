@@ -5,7 +5,6 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # PATH configuration
-export PATH="$HOME/dotfiles/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # Java - use java_home utility for dynamic version

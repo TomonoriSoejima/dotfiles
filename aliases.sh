@@ -24,9 +24,6 @@ alias zip="zip -9"
 alias down="open ~/Downloads"
 alias cdown="cd ~/Downloads"
 
-# Elastic utilities shortcuts
-alias sfdc-tomo="cd ~/elastic/utilities/sfdc-case-downloader"
-
 # Terminal tab title
 title() {
   if [ -z "$1" ]; then
