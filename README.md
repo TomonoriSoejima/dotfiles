@@ -27,6 +27,30 @@ Ultra-minimal bash configuration. AI-first approach: keep only what can't be eas
 
 ## Installation
 
+### New Computer Setup (Complete Bootstrap)
+
+```bash
+# 1. Download and run bootstrap script
+curl -fsSL https://raw.githubusercontent.com/TomonoriSoejima/dotfiles/main/bootstrap.sh | bash
+
+# Or clone first, then run
+git clone https://github.com/TomonoriSoejima/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+chmod +x bootstrap.sh
+./bootstrap.sh
+```
+
+This will:
+- Install Xcode Command Line Tools
+- Install Homebrew + essential tools (git, gh, jq, tree, bat, etc.)
+- Install programming languages (Python, Node.js, Go, Java 17)
+- Authenticate with GitHub
+- Clone dotfiles + elastic repos (labs, utilities, tools)
+- Set up .env template
+- Initialize Python virtual environments
+
+### Existing Computer (Dotfiles Only)
+
 ```bash
 # 1. Clone or create this repo
 cd ~/dotfiles
