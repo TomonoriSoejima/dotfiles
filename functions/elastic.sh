@@ -275,7 +275,7 @@ diagme5 ()
 # Usage: ny TICKET_NUMBER
 # Example: ny 12345678
 ny() {
-    (cd /Users/surfer/elastic/iroiro/sfdc-tomo && python3 feed_downloader_simple.py "$@")
+    (cd /Users/surfer/elastic/utilities/sfdc-tomo && python3 feed_downloader_simple.py "$@")
     
     if [[ -n "$1" ]]; then
         local ticket_dir=$(ls -d ~/tickets/"$1"* 2>/dev/null | head -1)
