@@ -1,21 +1,17 @@
 #!/bin/bash
 # Environment configuration
 
-# PATH configuration
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/dotfiles/bin:$PATH"
-
-# Homebrew
+# Homebrew (must be early to get correct paths)
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Java
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-17.0.1.jdk/Contents/Home"
+# PATH configuration
+export PATH="$HOME/dotfiles/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
-# Go
-export GOPATH=/usr/local/go/
-export PATH=$PATH:$GOPATH/bin
+# Java - use java_home utility for dynamic version
+if [ -x /usr/libexec/java_home ]; then
+    export JAVA_HOME="$(/usr/libexec/java_home 2>/dev/null)"
+fi
 
 # Elastic
 export ES_TMPDIR=/tmp
