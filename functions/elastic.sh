@@ -271,6 +271,28 @@ diagme5 ()
 # Ticket Workflow Functions
 # ======================================================================
 
+# es-aag() - Run at-a-glance analysis on a local diagnostics folder
+# Auto-detects ES / Logstash / Kibana based on files present
+# Usage: es-aag <path-to-diagnostics-folder>
+# Example: es-aag ~/tickets/02033426/attachments/local-diagnostics-20260211-033232
+es-aag() {
+    local target="${1:-.}"
+    local atg=~/elastic/source/support/agentTools/at-a-glance
+    (
+        cd "$target"
+        if ls nodes.json &>/dev/null || ls nodes_stats.json &>/dev/null; then
+            "$atg/es_1.sh"
+        elif ls logstash_node.json &>/dev/null; then
+            "$atg/ls_1.sh"
+        elif ls kibana_stats.json &>/dev/null; then
+            "$atg/ki_1.sh"
+        else
+            echo "Could not detect diagnostic type in: $target"
+            return 1
+        fi
+    )
+}
+
 # ny() - Download ticket feeds
 # Usage: ny TICKET_NUMBER
 # Example: ny 12345678
