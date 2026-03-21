@@ -297,7 +297,7 @@ es-aag() {
 # Usage: ny TICKET_NUMBER
 # Example: ny 12345678
 ny() {
-    (cd $HOME/elastic/utilities/sfdc-case-downloader && python3 feed_downloader_simple.py "$@")
+    (cd $HOME/elastic/casepilot && python3 feed_downloader_simple.py "$@")
 }
 
 # open-case() - Open a case directory with standard workspace
