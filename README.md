@@ -19,7 +19,7 @@ Ultra-minimal bash configuration. AI-first approach: keep only what can't be eas
 ├── env.sh                 # Environment variables, PATH, history
 ├── aliases.sh             # Basic aliases (ll, .., grep)
 ├── functions/
-│   └── elastic.sh         # ESS diagnostic functions (ess, diag, diagme, diagme5)
+│   └── elastic.sh         # Elastic ticket workflow functions (ny)
 ├── .env.example           # Template for API keys
 ├── install.sh             # Symlink automation
 └── README.md              # This file
@@ -42,12 +42,12 @@ chmod +x bootstrap.sh
 
 This will:
 - Install Xcode Command Line Tools
-- Install Homebrew + essential tools (git, gh, jq, tree, bat, etc.)
+- Install Homebrew + essential tools (git, gh, jq, tree, bat, uv, etc.)
 - Install programming languages (Python, Node.js, Go, Java 17)
 - Authenticate with GitHub
 - Clone dotfiles + elastic repos (labs, utilities, tools)
 - Set up .env template
-- Initialize Python virtual environments
+- Initialize Python virtual environments with uv
 
 ### Existing Computer (Dotfiles Only)
 
@@ -69,10 +69,9 @@ source ~/.bash_profile
 ## What's Included
 
 **Functions:**
-- `ess` - ESS API proxy
-- `diag` - Download diagnostics
-- `diagme` - Download diagnostics with timestamped folder
-- `diagme5` - Download diagnostics, wait 5min, re-pull stats
+- `ny` - Download ticket feeds (`ny <ticket_number>`)
+- `open-case` - Open a case directory as a VSCode workspace (`open-case <ticket_number>`)
+- `ess` - ESS API proxy binary (`ess <deployment_id> <path>`)
 
 **Aliases:**
 - `ll` - ls -ltrh
@@ -89,6 +88,34 @@ Dropped functions that can be handled by AI assistant:
 - Utility functions (boon, mappi, task, ana, backup, byte, etc.)
 
 Just ask your AI assistant when you need these operations!
+
+## Python Development
+
+Using **uv** for blazingly fast package management:
+
+```bash
+# Create virtual environment
+cd ~/elastic/utilities/my-project
+uv venv                        # Creates .venv in current directory
+
+# Activate (standard venv activation)
+source .venv/bin/activate
+
+# Install packages (10-100x faster than pip)
+uv pip install requests elasticsearch
+uv pip install -r requirements.txt
+
+# Deactivate
+deactivate
+```
+
+**Why uv?**
+- 🚀 10-100x faster than pip
+- 🎯 Drop-in replacement for pip/venv
+- 🔧 Zero configuration needed
+- 📦 Uses standard Python packaging
+
+All venvs are `.venv/` in each project (git-ignored).
 
 ## Updating
 
