@@ -39,6 +39,10 @@ open-case() {
     case_dir=$(cd "$case_dir" && pwd)
     case_name=$(basename "$case_dir")
 
+    # Update terminal tab title and cd into the case directory
+    echo -ne "\033]0;${case_name}\007"
+    cd "$case_dir"
+
     # Open VS Code with just the case folder
     code "$case_dir"
 
