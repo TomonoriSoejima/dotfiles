@@ -28,7 +28,7 @@ export LANG=en_US.UTF-8
 
 # Pager
 export PAGER=less
-export LESS="-I -G -M -R"
+export LESS="-I -M -R"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Load API keys from .env (not in git!)
