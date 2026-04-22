@@ -70,6 +70,14 @@ aws logs get-log-events    rtk aws logs get-log-events
 aws s3 ls                  rtk aws s3 ls
 ```
 
+### Package Managers
+```bash
+pip list                   rtk pip list
+pip outdated               rtk pip outdated
+uv pip list                rtk pip list
+pnpm list                  rtk pnpm list
+```
+
 ### Data & Misc
 ```bash
 curl <url>                 rtk curl <url>
