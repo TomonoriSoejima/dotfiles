@@ -18,6 +18,12 @@ ln -sf ~/dotfiles/.bash_profile ~/.bash_profile
 ln -sf ~/dotfiles/.bashrc ~/.bashrc
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 
+# GitHub Copilot / RTK config
+mkdir -p ~/.github/hooks
+ln -sf ~/dotfiles/.github/copilot-instructions.md ~/.github/copilot-instructions.md
+ln -sf ~/dotfiles/.github/hooks/rtk-rewrite.json ~/.github/hooks/rtk-rewrite.json
+ln -sf ~/dotfiles/.github/hooks/rtk-copilot-hook.sh ~/.github/hooks/rtk-copilot-hook.sh
+
 echo "✓ Dotfiles installed!"
 echo ""
 echo "Next steps:"

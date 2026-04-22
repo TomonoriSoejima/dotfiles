@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "bash ~/.github/hooks/rtk-copilot-hook.sh",
+        "cwd": ".",
+        "timeout": 5
+      }
+    ]
+  }
+}
